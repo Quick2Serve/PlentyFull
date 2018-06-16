@@ -19,7 +19,7 @@ export default class HomeView extends React.Component {
 
 async componentWillMount(){
   const testData = [...agencyServiceGroups];
-  for(let i =0; i < 10; i++)
+  for(let i =0; i < 15; i++)
   {
     const googleMapsURL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
     +`?input=${agencyServiceGroups[i].Address1.split(" ").join("%20")}`
@@ -40,6 +40,7 @@ async componentWillMount(){
     testData[i].longitude = latandlogData["lng"]
   }
 
+  console.log(testData.length)
    this.setState({
      rowMaps: testData,
      objectsLoaded: true,
