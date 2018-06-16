@@ -53,7 +53,7 @@ async componentWillMount(){
     +`?input=${agencyServiceGroups[i].Address1.split(" ").join("%20")}%2C${agencyServiceGroups[i].City}%2C${agencyServiceGroups[i].State}`
     +"&inputtype=textquery"
     +"&fields=geometry"
-    +"&key=AIzaSyBm6Snu1lD9P4YxHKHdVwxQ27WhGUmpm_Q"
+    +"&key=AIzaSyBSdhGqhspvP_4z1VMTavVSyeTv-uurh_I"
     const googleMapsLocate = await axios.get(googleMapsURL);
     const latandlogData = googleMapsLocate.data.candidates[0]["geometry"]["location"];
 
@@ -107,10 +107,10 @@ async componentWillMount(){
         <TouchableOpacity onPress={()=>this.state.navigate('myMap', { long: props.item.longitude, lati: props.item.latitude })}>
         <Image source={{uri: props.item.staticImage}} style={{width: 310, height: 200, borderWidth: 1, borderColor:'#000000'}}/>
         {this.state.errorMessage !== 'Permission to access location was denied' && this.state.location ? 
-          <Text style={styles.yoStyles}>Distance away: {props.item.currentDistance.toFixed(2)} miles</Text> 
+          <Text style={styles.yoStyles}><Text style={{fontWeight: "bold"}}>Distance away: </Text>{props.item.currentDistance.toFixed(2)} miles</Text> 
           : ""}
-        <Text style={styles.yoStyles}>{`Hours: ${props.item.HOURS}`}</Text>
-        <Text style={styles.yoStyles}> {`Description: ${props.item.DESCRIPTION}`} </Text>
+        <Text style={styles.yoStyles}><Text style={{fontWeight: "bold"}}>Hours: </Text>{props.item.HOURS}</Text>
+        <Text style={styles.yoStyles}><Text style={{fontWeight: "bold"}}>Description:</Text> {props.item.DESCRIPTION} </Text>
         </TouchableOpacity>
       </Card>
     );
