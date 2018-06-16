@@ -20,35 +20,37 @@ export default class HomeView extends React.Component {
   pullOrgs() {
     let promise = getTestOrganization();
 
-    const foreach = element => {
-      var org = new Object();
-      console.log(element["Address1"]);
-      org.Address = element["Address1"];
-      org.Phone = element["Agency Phone1"];
-      org.Description = element["DESCRIPTION"];
-      org.Eligibility = element["ELIGIBILITY"];
-      org.Hours = element["HOURS"];
-      org.Name = element["Name"];
-      org.URL = element["URL"];
-      org.ZipCode = element["ZIPCode"];
-      org.ID = element["Location_ID"];
-      orgs.set(org.ID, org);
-      console.log(this.setState)
+    const promiseFunc = value => {
+      var orgs = new Array();
+      // value is an array
+      let list = value.val();
+      for (i = 0;i < list.length; i++) {
+        let element = list[i];
+        var org = new Object();
+        org.Address = element["Address1"];
+        org.Phone = element["Agency Phone1"];
+        org.Description = element["DESCRIPTION"];
+        org.Eligibility = element["ELIGIBILITY"];
+        org.Hours = element["HOURS"];
+        org.Name = element["Name"];
+        org.URL = element["URL"];
+        org.ZipCode = element["ZIPCode"];
+        org.ID = element["Location_ID"];
+        orgs.push({
+          "key": org.ID,
+          "value": org,
+        });
+      }
+
       this.setState({
         objectsLoaded: true,
         rowMaps: orgs,
-      });
-    };
-    foreach.bind(this)
-
-    const promfunc = value => {
-      var orgs = new Map();
-      // value is an array
-      let list = value.val();
-      list.forEach(foreach).bind(orgs);
+      })
     }
 
-    promise.then(promfunc, function() {
+    promiseFunc.bind(this);
+
+    promise.then(promiseFunc, function() {
       console.log('failed')
     })
   }
