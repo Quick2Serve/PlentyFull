@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View, FlatList, Image} from 'react-native';
+import {Text, View, FlatList, Image, Button} from 'react-native';
+import {StackNavigator, NavigationActions} from 'react-navigation';
 
 export default class HomeView extends React.Component {
 
@@ -16,14 +17,22 @@ export default class HomeView extends React.Component {
           {key: 'Jillian'},
           {key: 'Jimmy'},
           {key: 'Julie'},
-        ]
+        ],
+        navigate: props.navigation.navigate
     }
   }
 
   MapObjects(props){
+     // const { navigate } =this.prop.navigation;
     console.log(props)
     return(
       <View>
+        <Button
+          title="Closest place..."
+          onPress={() =>
+            this.state.navigate('MapView', { key: props.item.key })
+          }
+        />
         <Image source={{uri: props.item.screenshots}}
           style={{width: 200, height: 200}}/>
         <Text>{props.item.key}</Text>
