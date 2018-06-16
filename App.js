@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator} from 'react-navigation';
-import {ListView, MapView, Setting} from './Views/index';
+import {HomeView, MapView, Setting} from './Views/index';
 
 const App = createBottomTabNavigator(
   {
-    ListView:{
-      screen: ListView,
+    HomeView:{
+      screen: HomeView,
       navigationOptions:{
         headerTitle: "List",
       },
