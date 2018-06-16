@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { createBottomTabNavigator} from 'react-navigation';
-import {HomeView, MapView, Setting} from './Views/index';
+import {HomeView, myMap, Setting} from './Views/index';
 import { getTestOrganization } from './database.js';
 
 let promise = getTestOrganization();
@@ -34,8 +34,8 @@ const App = createBottomTabNavigator(
         headerTitle: "List",
       },
     },
-    MapView:{
-      screen: MapView,
+    myMap:{
+      screen: myMap,
       navigationOptions:{
         headerTitle: "Map",
       },
