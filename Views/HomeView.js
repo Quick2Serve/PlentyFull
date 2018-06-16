@@ -102,7 +102,10 @@ async componentWillMount(){
     +"&maptype=mapnik"
     +`&markers=${latandlogData["lat"]},${latandlogData["lng"]},`
     +"lightblue1";
+    testData[i].latitude = latandlogData["lat"]
+    testData[i].longitude = latandlogData["lng"]
   }
+
    this.setState({
      sampleData: testData
    })
@@ -112,8 +115,8 @@ async componentWillMount(){
 
     return(
       <View key={props.item.Location_ID} style={{marginBottom: 15}}>
-        <TouchableOpacity onPress={()=>this.state.navigate('myMap', { key: props.item.key })}>
-        <Image source={{uri: props.item.staticImage}} style={{width: 380, height: 150}}/> 
+        <TouchableOpacity onPress={()=>this.state.navigate('myMap', { long: props.item.longitude, lati: props.item.latitude })}>
+        <Image source={{uri: props.item.staticImage}} style={{width: 380, height: 150}}/>
         <Text> {props.item.Name} </Text>
         <Text> {props.item.DESCRIPTION} </Text>
         </TouchableOpacity>
