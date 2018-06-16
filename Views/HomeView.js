@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, FlatList} from 'react-native';
+import {Text, View, FlatList, Image} from 'react-native';
 
 export default class HomeView extends React.Component {
 
@@ -8,7 +8,7 @@ export default class HomeView extends React.Component {
 
     this.state={
       rowMaps:[
-          {key: 'Devin'},
+          {key: 'Devin', screenshots: 'https://facebook.github.io/react/logo-og.png'},
           {key: 'Jackson'},
           {key: 'James'},
           {key: 'Joel'},
@@ -24,6 +24,8 @@ export default class HomeView extends React.Component {
     console.log(props)
     return(
       <View>
+        <Image source={{uri: props.item.screenshots}}
+          style={{width: 200, height: 200}}/>
         <Text>{props.item.key}</Text>
       </View>
     );
@@ -31,13 +33,13 @@ export default class HomeView extends React.Component {
 
   render(){
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100, borderStyle: "solid", }}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={this.state.rowMaps}
           renderItem={this.MapObjects.bind(this)}
         />
       </View>
-
     );
   }
 }
