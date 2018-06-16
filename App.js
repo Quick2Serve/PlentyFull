@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { getTestOrganization } from './database.js';
+import { TabNavagator} from 'react-navigation';
 
 let promise = getTestOrganization();
 promise.then(function(value) {
@@ -9,21 +10,27 @@ promise.then(function(value) {
   console.log('failed')
 })
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-    );
+const App = TabNaviator(
+  {
+    ListView:{
+      screen: ListView,
+      navigationOptions:{
+        headerTitle: "List",
+      },
+    }
+    MapView:{
+      screen: mapView,
+      navigationOptions:{
+        headerTitle: "Map",
+      },
+    }
+    Setting{
+      screen: setting,
+      navigationOptions:{
+        headerTitle: "Setting",
+      },
+    }
   }
-}
+)
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App
