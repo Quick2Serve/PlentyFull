@@ -2,7 +2,12 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { getTestOrganization } from './database.js';
 
-console.log("getting orgs:", getTestOrganization());
+let promise = getTestOrganization();
+promise.then(function(value) {
+  console.log(value)
+}, function() {
+  console.log('failed')
+})
 
 export default class App extends React.Component {
   render() {

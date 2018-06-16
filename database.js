@@ -13,11 +13,15 @@ firebase.initializeApp(config);
 
 var db = firebase.database()
 
-export function getTestOrganization() {
+export const getTestOrganization = async () => {
     var organizations;
-    db.ref('/Organizations/Test Org').once('value').then(function(snapshot) {
-      organizations = snapshot;
-    });
+    try {
+      await db.ref('/Organizations/Test Org').once('value').then(function(snapshot) {
+        organizations = snapshot;
+      });
+    } catch(err) {
+      console.log(err)
+  }
     return organizations;
 };
 
