@@ -39,6 +39,10 @@ async componentWillMount(){
     +"lightblue1";
     testData[i].latitude = latandlogData["lat"]
     testData[i].longitude = latandlogData["lng"]
+    testData[i].key = "" + i;
+  }
+  for(let i = 15;i < testData.length;i++) {
+    testData[i].key = "" + i;
   }
 
   console.log(testData.length)
