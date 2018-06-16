@@ -1,25 +1,56 @@
 import React from 'react';
 import {Text, View, FlatList, Image, Button} from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
+import { getTestOrganization } from '../database.js';
 
 export default class HomeView extends React.Component {
-
+  
   constructor(props){
     super(props);
-
+    
     this.state={
-      rowMaps:[
-          {key: 'Devin', screenshots: 'https://facebook.github.io/react/logo-og.png'},
-          {key: 'Jackson'},
-          {key: 'James'},
-          {key: 'Joel'},
-          {key: 'John'},
-          {key: 'Jillian'},
-          {key: 'Jimmy'},
-          {key: 'Julie'},
-        ],
-        navigate: props.navigation.navigate
+      rowMaps: undefined,
+      navigate: props.navigation.navigate,
+      objectsLoaded: false
     }
+    
+    this.pullOrgs.bind(this)
+  }
+  
+  pullOrgs() {
+    let promise = getTestOrganization();
+
+    const foreach = element => {
+      var org = new Object();
+      console.log(element["Address1"]);
+      org.Address = element["Address1"];
+      org.Phone = element["Agency Phone1"];
+      org.Description = element["DESCRIPTION"];
+      org.Eligibility = element["ELIGIBILITY"];
+      org.Hours = element["HOURS"];
+      org.Name = element["Name"];
+      org.URL = element["URL"];
+      org.ZipCode = element["ZIPCode"];
+      org.ID = element["Location_ID"];
+      orgs.set(org.ID, org);
+      console.log(this.setState)
+      this.setState({
+        objectsLoaded: true,
+        rowMaps: orgs,
+      });
+    };
+    foreach.bind(this)
+
+    const promfunc = value => {
+      var orgs = new Map();
+      // value is an array
+      let list = value.val();
+      list.forEach(foreach).bind(orgs);
+    }
+
+    promise.then(promfunc, function() {
+      console.log('failed')
+    })
   }
 
   MapObjects(props){
@@ -40,14 +71,26 @@ export default class HomeView extends React.Component {
     );
   }
 
+  flatList() {
+    return (<FlatList
+              showsVerticalScrollIndicator={false}
+              data={this.state.rowMaps}
+              renderItem={this.MapObjects.bind(this)}
+        />);
+  }
+
+  loading() {
+    return (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Text>Loading....</Text>
+          </View>);
+  }
+
   render(){
+    this.pullOrgs();
+
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100, borderStyle: "solid", }}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={this.state.rowMaps}
-          renderItem={this.MapObjects.bind(this)}
-        />
+        {this.state.objectsLoaded ? this.flatList() : this.loading()}
       </View>
     );
   }
