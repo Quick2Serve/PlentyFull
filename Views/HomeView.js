@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, FlatList, Image, Button, TouchableOpacity, Platform, StyleSheet} from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
-import {Card} from 'react-native-elements'
+import {Card, Header} from 'react-native-elements'
 import axios from 'axios';
 import _ from "lodash";
 import { Constants, Location, Permissions } from 'expo';
@@ -118,7 +118,7 @@ async componentWillMount(){
 
   flatList() {
     return (<FlatList 
-              style={{maxWidth: "100%"}}
+              style={{maxWidth: "100%", backgroundColor: "#d3d3d3"}}
               showsVerticalScrollIndicator={false}
               data={this.state.rowMaps}
               renderItem={this.MapObjects.bind(this)}
@@ -135,8 +135,13 @@ async componentWillMount(){
   render(){
 
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 10, borderStyle: "solid", }}>
+      <View style={{flex: 1}}>
+      <Header
+        centerComponent={{ text: 'Plentyfull', style: { color: '#fff' } }}
+      />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', borderStyle: "solid", }}>
         {this.state.objectsLoaded ? this.flatList() : this.loading()}
+      </View>
       </View>
     );
   }
