@@ -1,6 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { getTestOrganization } from './database.js';
 import { TabNavagator} from 'react-navigation';
+
+let promise = getTestOrganization();
+promise.then(function(value) {
+  console.log(value)
+}, function() {
+  console.log('failed')
+})
 
 const App = TabNaviator(
   {
