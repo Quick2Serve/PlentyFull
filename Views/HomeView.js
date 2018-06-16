@@ -1,73 +1,3 @@
-const sample = [{
-  "Location_ID": 1049,
-  "Agency_Key": "MAIN1049",
-  "Name": "CATHOLIC CHARITIES INDIANAPOLIS",
-  "BldgLine": "",
-  "Address1": "1400 North Meridian Street",
-  "Address2": "",
-  "City": "Indianapolis",
-  "State": "IN",
-  "ZIPCode": 46202,
-  "County": "Marion",
-  "Country": "USA",
-  "Confidential": "FALSE",
-  "URL": "www.helpcreatehope.org",
-  "Record_Owner": "MAIN",
-  "Agency Phone1": "(317) 236-1500",
-  "Agency Phone2": "(317) 261-3375 - Fax",
-  "Agency Phone3": "",
-  "Agency Phone4": "",
-  "Agency Phone5": "",
-  "Agency Phone6": "",
-  "Agency Phone7": "",
-  "Agency Phone8": "",
-  "Agency Phone9": "",
-  "Agency Phone10": "",
-  "Service_ID": 1323,
-  "Program1": "",
-  "DESCRIPTION": "Provides food to persons in need. Limited service area.",
-  "HOURS": "Mon 1pm and 5pm ET",
-  "ELIGIBILITY": "* Living in Marion County\n* With no other resources for food\n* Not used this pantry during the past 30 days",
-  "INTAKE PROCEDURE": "Walk in; arrive by 1pm or 5pm on Monday; arriving up to 30 minutes early suggested.",
-  "WHAT TO BRING": "Proof of address (such as driver's license, current mail, or utility bill)",
-  "SERVICE AREA": "Marion County"
-},
-{
-  "Location_ID": 1128,
-  "Agency_Key": "MAIN1128",
-  "Name": "VIDA NUEVA UNITED METHODIST CHURCH - CENTRO FAMILIAR",
-  "BldgLine": "",
-  "Address1": "2801 West Washington Street",
-  "Address2": "",
-  "City": "Indianapolis",
-  "State": "IN",
-  "ZIPCode": 46222,
-  "County": "Marion",
-  "Country": "USA",
-  "Confidential": "FALSE",
-  "URL": "www.vidanuevaindy.org",
-  "Record_Owner": "MAIN",
-  "Agency Phone1": "(317) 638-0796",
-  "Agency Phone2": "",
-  "Agency Phone3": "",
-  "Agency Phone4": "",
-  "Agency Phone5": "",
-  "Agency Phone6": "",
-  "Agency Phone7": "",
-  "Agency Phone8": "",
-  "Agency Phone9": "",
-  "Agency Phone10": "",
-  "Service_ID": 1410,
-  "Program1": "",
-  "DESCRIPTION": "Provides nonperishable food to people in need. Limited service area.",
-  "HOURS": "Tues 6:15pm-7:15pm ET",
-  "ELIGIBILITY": "* Living in Marion County\n* Not used this pantry within past 30 days",
-  "INTAKE PROCEDURE": "Walk-in.",
-  "WHAT TO BRING": "* Photo ID\n* Proof of address",
-  "SERVICE AREA": "Marion County"
-}
-]
-
 import React from 'react';
 import {Text, View, FlatList, Image, Button, TouchableOpacity} from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
@@ -75,19 +5,19 @@ import { getTestOrganization } from '../database.js';
 import axios from 'axios';
 
 export default class HomeView extends React.Component {
-  
+
   constructor(props){
     super(props);
-    
+
     this.state={
       rowMaps: undefined,
       navigate: props.navigation.navigate,
       objectsLoaded: false
     }
-    
+
     this.pullOrgs.bind(this)
   }
-  
+
   pullOrgs() {
     let promise = getTestOrganization();
 
@@ -169,7 +99,7 @@ async componentWillMount(){
   flatList() {
     return (<FlatList
               showsVerticalScrollIndicator={false}
-              data={this.state.rowMaps}
+              data={this.state.sampleData}
               renderItem={this.MapObjects.bind(this)}
         />);
   }
@@ -190,14 +120,3 @@ async componentWillMount(){
     );
   }
 }
-
-/*
-
-<TouchableOpacity onPress={() =>
-  this.state.navigate('MapView', { key: props.item.key })}>
-  // <Image source={{uri: props.item.screenshots}}
-    // style={{width: 100, height: 100}}/>
-  </TouchableOpacity>
-  //title="Closest place..."
-
-  */
