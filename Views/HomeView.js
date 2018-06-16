@@ -118,7 +118,7 @@ async componentWillMount(){
 
   flatList() {
     return (<FlatList 
-              style={{maxWidth: "100%"}}
+              style={{maxWidth: "100%", backgroundColor: "#d3d3d3"}}
               showsVerticalScrollIndicator={false}
               data={this.state.rowMaps}
               renderItem={this.MapObjects.bind(this)}
