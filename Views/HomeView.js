@@ -1,15 +1,22 @@
 import React from 'react';
-import { Text, View, ListView} from 'react-native';
+import { Text, View, FlatList} from 'react-native';
 
 export default class HomeView extends React.Component {
 
   constructor(props){
-    super(props)
+    super(props);
 
     this.state={
       rowMaps:[
-          "Pikachu"
-      ]
+          {key: 'Devin'},
+          {key: 'Jackson'},
+          {key: 'James'},
+          {key: 'Joel'},
+          {key: 'John'},
+          {key: 'Jillian'},
+          {key: 'Jimmy'},
+          {key: 'Julie'},
+        ]
     }
   }
 
@@ -17,17 +24,19 @@ export default class HomeView extends React.Component {
     console.log(props)
     return(
       <View>
-        <Text> Hello :) </Text>
+        <Text>{props.item.key}</Text>
       </View>
     );
   }
+
   render(){
     return (
-      <ListView
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        dataSource={this.state.rowMaps}
-        renderRow={this.MapObjects}
-      />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <FlatList
+          data={this.state.rowMaps}
+          renderItem={this.MapObjects.bind(this)}
+        />
+      </View>
 
     );
   }
