@@ -16,7 +16,7 @@ var db = firebase.database()
 export const getTestOrganization = async () => {
     var organizations;
     try {
-      await db.ref('/Organizations/Test Org').once('value').then(function(snapshot) {
+      await db.ref('/Organizations/-LF627SXzGMhDYYAgfJG').once('value').then(function(snapshot) {
         organizations = snapshot;
       });
     } catch(err) {
