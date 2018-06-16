@@ -8,12 +8,14 @@ const App = createBottomTabNavigator(
     HomeView:{
       screen: HomeView,
       navigationOptions:{
+        headerTitle: "List",
         tabBarIcon: ({tintColor}) => <Ionicons name="md-home" size={32} color={tintColor}/>,
       },
     },
     myMap:{
       screen: myMap,
       navigationOptions:{
+        headerTitle: "Map",
         tabBarIcon: ({tintColor}) => <Ionicons name="md-map" size={32} color={tintColor}/>,
       },
     },
