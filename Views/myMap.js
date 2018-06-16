@@ -11,6 +11,12 @@ export default class myMap extends React.Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      navigation: newProps.navigation.state.params,
+    })
+  }
+
   render(){
     return (
       <MapView

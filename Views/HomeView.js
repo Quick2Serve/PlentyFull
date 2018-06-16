@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View, FlatList, Image, Button, TouchableOpacity, Platform, StyleSheet} from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
+import {Card} from 'react-native-elements'
 import axios from 'axios';
 import _ from "lodash";
 import { Constants, Location, Permissions } from 'expo';
@@ -66,6 +67,10 @@ async componentWillMount(){
     testData[i].latitude = latandlogData["lat"]
     testData[i].longitude = latandlogData["lng"]
     testData[i].currentDistance = distance(latandlogData["lat"], latandlogData["lng"], this.state.location["coords"]["latitude"], this.state.location["coords"]["longitude"]);
+    testData[i].key = "" + i;
+  }
+  for(let i = NUMBER_OF_ELEMENTS_TO_LOAD;i < testData.length;i++) {
+    testData[i].key = "" + i;
   }
 
      const unsorted =  testData.splice(0,NUMBER_OF_ELEMENTS_TO_LOAD);
@@ -97,20 +102,17 @@ async componentWillMount(){
   MapObjects(props){
 
     return(
-      <View key={props.item.Location_ID} style={{marginBottom: 25, display: "inline-block"}}>
+      
+      <Card key={props.item.Location_ID} style={{marginBottom: 10}} title={props.item.Name} loading={false}>
         <TouchableOpacity onPress={()=>this.state.navigate('myMap', { long: props.item.longitude, lati: props.item.latitude })}>
-        
-        <Image source={{uri: props.item.staticImage}} style={{width: 380, height: 200, borderWidth: 1, borderColor:'#000000'}}/>
-        {/* <View style={{ }} > */}
-          <Text style={styles.maStyles}> {_.startCase(_.toLower(props.item.Name))} </Text>
-          {this.state.errorMessage !== 'Permission to access location was denied' && this.state.location ? 
+        <Image source={{uri: props.item.staticImage}} style={{width: 310, height: 200, borderWidth: 1, borderColor:'#000000'}}/>
+        {this.state.errorMessage !== 'Permission to access location was denied' && this.state.location ? 
           <Text style={styles.yoStyles}>Distance away: {props.item.currentDistance.toFixed(2)} miles</Text> 
           : ""}
-          <Text style={styles.yoStyles}>{props.item.HOURS}</Text>
-          <Text style={styles.yoStyles}> {props.item.DESCRIPTION} </Text>
-        {/* </View> */}
+        <Text style={styles.yoStyles}>{`Hours: ${props.item.HOURS}`}</Text>
+        <Text style={styles.yoStyles}> {`Description: ${props.item.DESCRIPTION}`} </Text>
         </TouchableOpacity>
-      </View>
+      </Card>
     );
   }
 
@@ -133,7 +135,7 @@ async componentWillMount(){
   render(){
 
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 100, borderStyle: "solid", }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', marginTop: 10, borderStyle: "solid", }}>
         {this.state.objectsLoaded ? this.flatList() : this.loading()}
       </View>
     );
