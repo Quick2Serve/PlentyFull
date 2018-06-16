@@ -1,4 +1,4 @@
-[
+const agencyServiceGroups =[
 	{
 		"Location_ID": 1049,
 		"Agency_Key": "MAIN1049",
@@ -3434,3 +3434,6 @@
 		"SERVICE AREA": ""
 	}
 ]
+
+
+export default agencyServiceGroups
