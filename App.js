@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
+import { createBottomTabNavigator} from 'react-navigation';
+import {HomeView, MapView, Setting} from './Views/index';
 import { getTestOrganization } from './database.js';
-import { TabNavagator} from 'react-navigation';
 
 let promise = getTestOrganization();
 promise.then(function(value) {
@@ -10,22 +12,22 @@ promise.then(function(value) {
   console.log('failed')
 })
 
-const App = TabNaviator(
+const App = createBottomTabNavigator(
   {
-    ListView:{
-      screen: ListView,
+    HomeView:{
+      screen: HomeView,
       navigationOptions:{
         headerTitle: "List",
       },
-    }
+    },
     MapView:{
-      screen: mapView,
+      screen: MapView,
       navigationOptions:{
         headerTitle: "Map",
       },
-    }
-    Setting{
-      screen: setting,
+    },
+    Setting:{
+      screen: Setting,
       navigationOptions:{
         headerTitle: "Setting",
       },
