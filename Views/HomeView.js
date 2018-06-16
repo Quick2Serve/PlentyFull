@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View, FlatList, Image, Button, TouchableOpacity} from 'react-native';
 import {StackNavigator, NavigationActions} from 'react-navigation';
+import {Card} from 'react-native-elements'
 import axios from 'axios';
 import agencyServiceGroups from '../Agency_ServiceGroup'
 
@@ -32,7 +33,7 @@ async componentWillMount(){
     testData[i].staticImage = `http://staticmap.openstreetmap.de/staticmap.php`
     +`?center=${latandlogData["lat"]},${latandlogData["lng"]}`
     +"&zoom=18"
-    +"&size=865x512"
+    +"&size=380x250"
     +"&maptype=mapnik"
     +`&markers=${latandlogData["lat"]},${latandlogData["lng"]},`
     +"lightblue1";
@@ -51,13 +52,13 @@ async componentWillMount(){
   MapObjects(props){
 
     return(
-      <View key={props.item.Location_ID} style={{marginBottom: 15}}>
+      
+      <Card key={props.item.Location_ID} style={{marginBottom: 10}} title={props.item.Name} loading={false}>
         <TouchableOpacity onPress={()=>this.state.navigate('myMap', { long: props.item.longitude, lati: props.item.latitude })}>
         <Image source={{uri: props.item.staticImage}} style={{width: 380, height: 150}}/>
-        <Text> {props.item.Name} </Text>
-        <Text> {props.item.DESCRIPTION} </Text>
+        <Text> {`Description: ${props.item.DESCRIPTION}`} </Text>
         </TouchableOpacity>
-      </View>
+      </Card>
     );
   }
 
