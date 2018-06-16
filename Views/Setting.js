@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { CheckBox, SearchBar, List, ListItem, Text } from 'react-native-elements'
+import { CheckBox, SearchBar, List, ListItem, Text, Header } from 'react-native-elements'
 
 const list = [
   {
@@ -14,6 +14,10 @@ const list = [
 export default class Setting extends React.Component {
   render(){
     return (
+      <View style={{flex: 1}}>
+      <Header
+        centerComponent={{ text: 'Plentyfull', style: { color: '#fff' } }}
+      />
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <Text h2>Settings</Text>
         <Text h4>Filters Organizations By</Text>
@@ -37,6 +41,7 @@ export default class Setting extends React.Component {
           ))
         }
       </List>
+      </View>
       </View>
     );
   }
