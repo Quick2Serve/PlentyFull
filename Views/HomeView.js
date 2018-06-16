@@ -157,7 +157,7 @@ export default class HomeView extends React.Component {
     return (
       <View style={{flex: 1}}>
       <Header
-        centerComponent={{ text: 'Plentyfull', style: { color: '#fff' } }}
+        centerComponent={{ text: 'PlentyFull', style: { color: '#fff' } }}
       />
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', borderStyle: "solid", }}>
         {this.state.objectsLoaded ? this.flatList() : this.loading()}
