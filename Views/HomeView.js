@@ -10,30 +10,17 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
-
-import { StackNavigator, NavigationActions } from 'react-navigation';
-import { Card, Header } from 'react-native-elements'
-import axios from 'axios';
-import _ from "lodash";
 import {
   Constants,
   Location,
   Permissions
 } from 'expo';
-import agencyServiceGroups from '../Agency_ServiceGroup'
 
-const NUMBER_OF_ELEMENTS_TO_LOAD = 15;
-
-function distance(lat1, lon1, lat2, lon2) {
-  var p = 0.017453292519943295;    // Math.PI / 180
-  var c = Math.cos;
-  var a = 0.5 - c((lat2 - lat1) * p) / 2 +
-    c(lat1 * p) * c(lat2 * p) *
-    (1 - c((lon2 - lon1) * p)) / 2;
-
-  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-}
-
+import { StackNavigator, NavigationActions } from 'react-navigation';
+import { Card, Header } from 'react-native-elements'
+import axios from 'axios';
+import _ from "lodash";
+import getData from '../utils/getData';
 export default class HomeView extends React.Component {
 
   constructor(props) {
@@ -46,11 +33,8 @@ export default class HomeView extends React.Component {
       errorMessage: null,
       objectsLoaded: false
     }
-
   }
-
   async componentWillMount() {
-
     if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
@@ -58,46 +42,9 @@ export default class HomeView extends React.Component {
     } else {
       await this._getLocationAsync();
     }
-    const testData = [...agencyServiceGroups];
-
-    for (let i = 0; i < NUMBER_OF_ELEMENTS_TO_LOAD; i++) {
-      const googleMapsURL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        + `?input=${agencyServiceGroups[i].Address1.split(" ").join("%20")}%2C${agencyServiceGroups[i].City}%2C${agencyServiceGroups[i].State}`
-        + "&inputtype=textquery"
-        + "&fields=geometry"
-        + "&key=AIzaSyBSdhGqhspvP_4z1VMTavVSyeTv-uurh_I"
-      const googleMapsLocate = await axios.get(googleMapsURL);
-      const latandlogData = googleMapsLocate.data.candidates[0]["geometry"]["location"];
-
-      testData[i].staticImage = `http://staticmap.openstreetmap.de/staticmap.php`
-        + `?center=${latandlogData["lat"]},${latandlogData["lng"]}`
-        + "&zoom=18"
-        + "&size=380x250"
-        + "&maptype=mapnik"
-        + `&markers=${latandlogData["lat"]},${latandlogData["lng"]},`
-        + "lightblue1";
-      testData[i].latitude = latandlogData["lat"]
-      testData[i].longitude = latandlogData["lng"]
-      testData[i].currentDistance = distance(latandlogData["lat"], latandlogData["lng"], this.state.location["coords"]["latitude"], this.state.location["coords"]["longitude"]);
-      testData[i].key = "" + i;
-    }
-    for (let i = NUMBER_OF_ELEMENTS_TO_LOAD; i < testData.length; i++) {
-      testData[i].key = "" + i;
-    }
-
-    const unsorted = testData.splice(0, NUMBER_OF_ELEMENTS_TO_LOAD);
-    const sorted = unsorted.sort((a, b) => {
-      return a["currentDistance"] - b["currentDistance"];
-    })
-
-    this.setState({
-      rowMaps: sorted,
-      objectsLoaded: true,
-    },
-    )
-
+    var data = getData(15,this.state.location);
+    // this.setState({...data})
   }
-
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -111,38 +58,58 @@ export default class HomeView extends React.Component {
     this.setState({ location });
   };
 
-  MapObjects(props){
+  MapObjects(props) {
+   const {
+      agency_phone1,
+      location_id,
+      name,
+      longitude,
+      latitude,
+      description,
+      current_distance,
+      staticImage,
+      hours
+    } = props.item;
+    
+    const parmsToPass =  {
+      long: longitude,
+      lati: latitude,
+      Name: name,
+      DESCRIPTION: description,
+      currentDistance: current_distance,
+      phoneNumber: agency_phone1
+    }
 
-    return(
-      
-      <Card key={props.item.Location_ID} style={{marginBottom: 10}} title={props.item.Name} loading={false}>
-        <TouchableOpacity onPress={() => this.state.navigate('myMap', { 
-          long: props.item.longitude, 
-          lati: props.item.latitude,
-          Name: props.item.Name, 
-          DESCRIPTION: props.item.DESCRIPTION, 
-          currentDistance: props.item.currentDistance,
-           phoneNumber: props.item["Agency Phone1"]
-          })}>
-        <Image source={{uri: props.item.staticImage}} style={{width: 310, height: 200, borderWidth: 1, borderColor:'#000000'}}/>
-        {this.state.errorMessage !== 'Permission to access location was denied' && this.state.location ? 
-          <Text style={styles.yoStyles}><Text style={{fontWeight: "bold"}}>Distance away: </Text>{props.item.currentDistance.toFixed(2)} miles</Text> 
-          : ""}
-        <Text style={styles.yoStyles}><Text style={{fontWeight: "bold"}}>Hours: </Text>{props.item.HOURS}</Text>
-        <Text style={styles.yoStyles}><Text style={{fontWeight: "bold"}}>Description:</Text> {props.item.DESCRIPTION} </Text>
+    return (
+      <Card key={location_id} style={{ marginBottom: 10 }} title={name} loading={false}>
+        <TouchableOpacity onPress={() => this.state.navigate('myMap',parmsToPass)}>
+          <Image source={{ uri: staticImage }} style={{ width: 310, height: 200, borderWidth: 1, borderColor: '#000000' }} />
+          {
+            this.state.errorMessage !== 'Permission to access location was denied'
+              && this.state.location
+              ? <Text style={styles.yoStyles}>
+                <Text style={{ fontWeight: "bold" }}>
+                  Distance away:
+          </Text>
+                {current_distance} miles
+          </Text>
+              : ""
+          }
+          <Text style={styles.yoStyles}><Text style={{ fontWeight: "bold" }}>Hours: </Text>{hours}</Text>
+          <Text style={styles.yoStyles}><Text style={{ fontWeight: "bold" }}>Description:</Text> {description} </Text>
         </TouchableOpacity>
       </Card>
     );
   }
 
   flatList() {
-    return (<FlatList 
-              style={{maxWidth: "100%", backgroundColor: "#d3d3d3"}}
-              showsVerticalScrollIndicator={false}
-              data={this.state.rowMaps}
-              renderItem={this.MapObjects.bind(this)}
-              
-        />);
+    return (<FlatList
+      style={{ maxWidth: "100%", backgroundColor: "#d3d3d3" }}
+      showsVerticalScrollIndicator={false}
+      data={this.state.rowMaps}
+      renderItem={this.MapObjects.bind(this)}
+
+    />);
   }
 
   loading() {
@@ -153,22 +120,17 @@ export default class HomeView extends React.Component {
   }
 
   render() {
-
     return (
-      <View style={{flex: 1}}>
-      <Header
-        centerComponent={{ text: 'PlentyFull', style: { color: '#fff' } }}
-      />
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', borderStyle: "solid", }}>
-        {this.state.objectsLoaded ? this.flatList() : this.loading()}
-      </View>
+      <View style={{ flex: 1 }}>
+        <Header
+          centerComponent={{ text: 'PlentyFull', style: { color: '#fff' } }}
+        />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', borderStyle: "solid", }}>
+          {this.state.objectsLoaded ? this.flatList() : this.loading()}
+        </View>
       </View>
     );
   }
-}
-
-function firstLetter(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();;
 }
 
 const styles = StyleSheet.create({

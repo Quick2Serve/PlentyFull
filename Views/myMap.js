@@ -78,34 +78,7 @@ export default class myMap extends React.Component {
       await this._getLocationAsync();
     }
 
-    const testData = [...agencyServiceGroups];
-
-    for (let i = 0; i < NUMBER_OF_ELEMENTS_TO_LOAD; i++) {
-      const googleMapsURL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        + `?input=${agencyServiceGroups[i].Address1.split(" ").join("%20")}%2C${agencyServiceGroups[i].City}%2C${agencyServiceGroups[i].State}`
-        + "&inputtype=textquery"
-        + "&fields=geometry"
-        + "&key=AIzaSyBSdhGqhspvP_4z1VMTavVSyeTv-uurh_I"
-      const googleMapsLocate = await axios.get(googleMapsURL);
-      const latandlogData = googleMapsLocate.data.candidates[0]["geometry"]["location"];
-
-      testData[i].staticImage = `http://staticmap.openstreetmap.de/staticmap.php`
-        + `?center=${latandlogData["lat"]},${latandlogData["lng"]}`
-        + "&zoom=18"
-        + "&size=380x250"
-        + "&maptype=mapnik"
-        + `&markers=${latandlogData["lat"]},${latandlogData["lng"]},`
-        + "lightblue1";
-      testData[i].latitude = latandlogData["lat"]
-      testData[i].longitude = latandlogData["lng"]
-      testData[i].currentDistance = distance(latandlogData["lat"], latandlogData["lng"], this.state.location["coords"]["latitude"], this.state.location["coords"]["longitude"]);
-      testData[i].key = "" + i;
-    }
-    for (let i = NUMBER_OF_ELEMENTS_TO_LOAD; i < testData.length; i++) {
-      testData[i].key = "" + i;
-    }
-
-    const unsorted = testData.splice(0, NUMBER_OF_ELEMENTS_TO_LOAD).map((marker) => (
+   const unsorted = testData.splice(0, NUMBER_OF_ELEMENTS_TO_LOAD).map((marker) => (
       <MapView.Marker
         coordinate={{
           latitude: marker.latitude,
@@ -124,9 +97,8 @@ export default class myMap extends React.Component {
     },
     )
 
-
-
   }
+
   componentWillReceiveProps(newProps) {
     this.setState({
       navigation: newProps.navigation.state.params,
@@ -180,23 +152,23 @@ export default class myMap extends React.Component {
       );
     }
 
-    if (this.state.location) {
-      return (
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={{
-            latitude: this.state.location["coords"]["latitude"],
-            longitude: this.state.location["coords"]["longitude"],
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          showsUserLocation={true}
-        >
+    // if (this.state.location) {
+    //   return (
+    //     <MapView
+    //       style={{ flex: 1 }}
+    //       initialRegion={{
+    //         latitude: this.state.location["coords"]["latitude"],
+    //         longitude: this.state.location["coords"]["longitude"],
+    //         latitudeDelta: 0.0922,
+    //         longitudeDelta: 0.0421,
+    //       }}
+    //       showsUserLocation={true}
+    //     >
 
-          { this.state.rowMaps}
-        </MapView>
-      );
-    }
+    //       { this.state.rowMaps}
+    //     </MapView>
+    //   );
+    // }
     return (
       <View>
         <Text> page couldn't load </Text>
