@@ -1,13 +1,8 @@
 import React from 'react';
 import { Text, View, Platform } from 'react-native';
 import { MapView } from 'expo';
-import axios from 'axios';
 import _ from "lodash";
-import {
-  Constants,
-  Location,
-  Permissions
-} from 'expo';
+import { Constants } from 'expo';
 import locationServices from '../utils/locationServices';
 import colorServices from '../utils/colorServices';
 
@@ -56,40 +51,6 @@ export default class myMap extends React.Component {
     })
   }
   render() {
-
-    if (this.state.navigation) {
-      const {
-        lati,
-        long, 
-        Name, 
-        currentDistance,
-        phoneNumber
-      } = this.props.navigation.state.params;
-      return (
-        <MapView
-          style={{ flex: 1 }}
-          initialRegion={{
-            latitude: lati,
-            longitude: long,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          showsUserLocation={true}
-        >
-          <MapView.Marker
-            coordinate={{
-              latitude: lati,
-              longitude: long,
-            }}
-            title={_.startCase(_.toLower(Name))}
-            description={phoneNumber}
-            tracksInfoWindowChanges ={true}
-            showCallout={true}
-          />
-        </MapView>
-      );
-    }
-
     if (this.state.location) {
       return (
         <MapView

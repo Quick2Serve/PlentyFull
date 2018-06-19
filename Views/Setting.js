@@ -15,9 +15,6 @@ export default class Setting extends React.Component {
  render(){
    return (
      <View style={{flex: 1, marginBottom: 20}}>
-     <Header
-       centerComponent={{ text: 'Setting', style: { color: '#fff' } }}
-     />
      <ScrollView>
        <View style={{ flex: 1}}>
          <Text style={{fontSize: 15, paddingLeft: 10, marginTop: 10}}>Filters Organizations By</Text>
