@@ -8,55 +8,8 @@ import {
   Location,
   Permissions
 } from 'expo';
-
-import agencyServiceGroups from '../Agency_ServiceGroup'
-
-const NUMBER_OF_ELEMENTS_TO_LOAD = 15;
-
-const Colors = {};
-Colors.names = {
-    aqua: "#00ffff",
-    azure: "#f0ffff",
-    beige: "#f5f5dc",
-    blue: "#0000ff",
-    fuchsia: "#ff00ff",
-    gold: "#ffd700",
-    green: "#008000",
-    indigo: "#4b0082",
-    khaki: "#f0e68c",
-    lightpink: "#ffb6c1",
-    lightyellow: "#ffffe0",
-    lime: "#00ff00",
-    magenta: "#ff00ff",
-    maroon: "#800000",
-    navy: "#000080",
-    lightgreen: "#90ee90",
-    lightgrey: "#d3d3d3",
-    olive: "#808000",
-    orange: "#ffa500",
-    pink: "#ffc0cb",
-    red: "#ff0000",
-    yellow: "#ffff00"
-};
-
-Colors.random = function() {
-  var result;
-  var count = 0;
-  for (var prop in this.names)
-      if (Math.random() < 1/++count)
-         result = prop;
-  return result;
-};
-
-function distance(lat1, lon1, lat2, lon2) {
-  var p = 0.017453292519943295;    // Math.PI / 180
-  var c = Math.cos;
-  var a = 0.5 - c((lat2 - lat1) * p) / 2 +
-    c(lat1 * p) * c(lat2 * p) *
-    (1 - c((lon2 - lon1) * p)) / 2;
-
-  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
-}
+import locationServices from '../utils/locationServices';
+import colorServices from '../utils/colorServices';
 
 export default class myMap extends React.Component {
   constructor(props) {
@@ -69,82 +22,39 @@ export default class myMap extends React.Component {
       navigation: props.navigation.state.params,
     }
   }
-  async componentWillMount() {
+
+ async componentWillMount() {
+    let locationData = {};
     if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
-    } else {
-      await this._getLocationAsync();
+        locationData.errorMessage= 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!';
+    } 
+    else {
+     locationData = await locationServices.getLocationAsync();
     }
-
-    const testData = [...agencyServiceGroups];
-
-    for (let i = 0; i < NUMBER_OF_ELEMENTS_TO_LOAD; i++) {
-      const googleMapsURL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        + `?input=${agencyServiceGroups[i].Address1.split(" ").join("%20")}%2C${agencyServiceGroups[i].City}%2C${agencyServiceGroups[i].State}`
-        + "&inputtype=textquery"
-        + "&fields=geometry"
-        + "&key=AIzaSyBSdhGqhspvP_4z1VMTavVSyeTv-uurh_I"
-      const googleMapsLocate = await axios.get(googleMapsURL);
-      const latandlogData = googleMapsLocate.data.candidates[0]["geometry"]["location"];
-
-      testData[i].staticImage = `http://staticmap.openstreetmap.de/staticmap.php`
-        + `?center=${latandlogData["lat"]},${latandlogData["lng"]}`
-        + "&zoom=18"
-        + "&size=380x250"
-        + "&maptype=mapnik"
-        + `&markers=${latandlogData["lat"]},${latandlogData["lng"]},`
-        + "lightblue1";
-      testData[i].latitude = latandlogData["lat"]
-      testData[i].longitude = latandlogData["lng"]
-      testData[i].currentDistance = distance(latandlogData["lat"], latandlogData["lng"], this.state.location["coords"]["latitude"], this.state.location["coords"]["longitude"]);
-      testData[i].key = "" + i;
-    }
-    for (let i = NUMBER_OF_ELEMENTS_TO_LOAD; i < testData.length; i++) {
-      testData[i].key = "" + i;
-    }
-
-    const unsorted = testData.splice(0, NUMBER_OF_ELEMENTS_TO_LOAD).map((marker) => (
+    const mapMarkers = locationServices.sortByDistance(locationData.location).map((marker) => (
       <MapView.Marker
         coordinate={{
           latitude: marker.latitude,
           longitude: marker.longitude,
         }}
-        title={_.startCase(_.toLower(marker.Name))}
-        description={marker["Agency Phone1"]+"\n"}
-        key={marker.Name}
-        pinColor={Colors.random()}
+        title={_.startCase(_.toLower(marker.name))}
+        description={marker.agency_phone1+"\n"}
+        key={marker.name}
+        pinColor={colorServices.random()}
       />
     ));
-
     this.setState({
-      rowMaps: unsorted,
+      ...locationData,
+      rowMaps: mapMarkers,
       objectsLoaded: true,
-    },
-    )
-
-
-
+    })
   }
+
   componentWillReceiveProps(newProps) {
     this.setState({
       navigation: newProps.navigation.state.params,
     })
   }
-
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location });
-  };
-
   render() {
 
     if (this.state.navigation) {
